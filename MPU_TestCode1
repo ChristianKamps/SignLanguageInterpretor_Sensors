@@ -75,14 +75,28 @@ void loop(){
   Wire.endTransmission(false);
   
   
-  // Used by the master to request bytes from a slave device.
+  // Wire.requestFrom is used by the master to request bytes from a slave device.
   // The bytes may then be retrieved with the available() and read() functions.
   // Wire.requestFrom(address, quantity, stop)
   // address: the 7-bit address of the device to request bytes from
   // quantity: the number of bytes to request
   // stop : boolean. true will send a stop message after the request, releasing the bus. false will continually send a restart after the request, keeping the connection active.
-  Wire.requestFrom(MPU_addr,14,true);  // request a total of 14 registers
+  // Requests registers 14 registers from 0x3B to 0x48
+  // These registers contain the high and low bits of the sensor outputs
+  Wire.requestFrom(MPU_addr,14,true);  
   
+  
+  // Send data from the sensor's output registers to the Arduino board.
+  // Each sensor output of the MPU is contained in two registers. 
+  // One register(High) holds bits [15:8]. One register (Low) holds bits [7:0]
+  // <<8| is shifting the data of the high register 8 bits to the right then adding in the data of the low register
+  // This function takes the two 8 bit registers and combines the data into the full 16-bit output
+  // Ex:
+  // Accel_x_low = cdefghij
+  // Accel_x_high = 000000ab
+  // Accel_x_high << 8 = ab00000000
+  // Accel_x_high << 8 | Accel_x_low = abcdefghij
+  // The registers containing bits [15:8] appear 
   
   AcX=Wire.read()<<8|Wire.read();  // 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)    
   AcY=Wire.read()<<8|Wire.read();  // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
