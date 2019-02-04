@@ -6,6 +6,9 @@ const int MPU_addr=0x68;
 // I2C address of Power Supply Managment Register (PWR_MGMT_1) of the MPU-6050
 const int MPU_addr_pwr_mng=0x6B;  
 
+// I2C address of the Accelerometer Measurement Register of the first 8 [15:8] bits of the Accerlerometer X-Output
+const int MPU_addr_accel_x_high=0x3B;  
+
 // 16-bit integer for each sensor output
 
 // Accelerometer X-Output
@@ -45,6 +48,7 @@ void setup(){
   
   // Ends a transmission to a slave device that was begun by beginTransmission(). 
   // Transmits the bytes that were queued by write().
+  // If true, endTransmission() sends a stop message after transmission, releasing the I2C bus.
   Wire.endTransmission(true);
   
   // Sets the data rate in bits per second (baud) for serial data transmission.
@@ -61,14 +65,25 @@ void loop(){
   Wire.beginTransmission(MPU_addr);
   
   // Write to Accelerometer Measurement Register of the first 8 [15:8] bits of the Accerlerometer X-Output
-
-  Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
+  Wire.write(MPU_addr_accel_x_high);  
   
-  
+  // Ends a transmission to a slave device that was begun by beginTransmission(). 
+  // Transmits the bytes that were queued by write().
+  // If false, endTransmission() sends a restart message after transmission. 
+  // The bus will not be released, which prevents another master device from transmitting between messages.
+  // This allows one master device to send multiple transmissions while in control.
   Wire.endTransmission(false);
   
   
+  // Used by the master to request bytes from a slave device.
+  // The bytes may then be retrieved with the available() and read() functions.
+  // Wire.requestFrom(address, quantity, stop)
+  // address: the 7-bit address of the device to request bytes from
+  // quantity: the number of bytes to request
+  // stop : boolean. true will send a stop message after the request, releasing the bus. false will continually send a restart after the request, keeping the connection active.
   Wire.requestFrom(MPU_addr,14,true);  // request a total of 14 registers
+  
+  
   AcX=Wire.read()<<8|Wire.read();  // 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)    
   AcY=Wire.read()<<8|Wire.read();  // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
   AcZ=Wire.read()<<8|Wire.read();  // 0x3F (ACCEL_ZOUT_H) & 0x40 (ACCEL_ZOUT_L)
