@@ -107,7 +107,7 @@ void loop(){
   // These registers contain the high and low bits of the sensor outputs
   Wire.requestFrom(MPU_addr,14,true);  
   
-  
+  //
   // Send data from the sensor's output registers to the Arduino board.
   // Each sensor output of the MPU is contained in two registers. 
   // One register(High) holds bits [15:8]. One register (Low) holds bits [7:0]
