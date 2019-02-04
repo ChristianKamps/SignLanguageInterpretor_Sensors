@@ -23,6 +23,10 @@ int16_t GyY;
 // Gyroscope Z-Output
 int16_t GyZ;
 
+
+// 1. Set the MPU 6050 as a slave device to the Arduino master
+// 2. Start the clock of the MPU 6050
+// 3. Begin serial data transmission
 void setup(){
 
   // Initiate the Wire library and join the I2C bus as a master 
@@ -50,9 +54,20 @@ void setup(){
 
 
 void loop(){
+
+  // Begin a transmission to the I2C slave device with the given address.
+  // Subsequently, queue bytes for transmission with the write() function.
+  // Transmit write function by calling endTransmission().
   Wire.beginTransmission(MPU_addr);
+  
+  // Write to Accelerometer Measurement Register of the first 8 [15:8] bits of the Accerlerometer X-Output
+
   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
+  
+  
   Wire.endTransmission(false);
+  
+  
   Wire.requestFrom(MPU_addr,14,true);  // request a total of 14 registers
   AcX=Wire.read()<<8|Wire.read();  // 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)    
   AcY=Wire.read()<<8|Wire.read();  // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
@@ -61,6 +76,10 @@ void loop(){
   GyX=Wire.read()<<8|Wire.read();  // 0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
   GyY=Wire.read()<<8|Wire.read();  // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
   GyZ=Wire.read()<<8|Wire.read();  // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
+  
+  
+  
+  
   Serial.print("AcX = "); Serial.print(AcX);
   Serial.print(" | AcY = "); Serial.print(AcY);
   Serial.print(" | AcZ = "); Serial.print(AcZ);
