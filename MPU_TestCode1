@@ -2,8 +2,10 @@
 #include "MPU6050.h"
 #include "I2Cdev.h"
 
+// Define MPU for connection tests
 MPU6050 accelgyro;
 
+// Define LED pin on Arduino for functionality verification
 #define LED_PIN 13
 bool blinkState = false;
 
@@ -43,7 +45,6 @@ void setup(){
 
   // Initiate the Wire library and join the I2C bus as a master 
   Wire.begin();
-  Fastwire::setup(400, true);
   
   // Begin a transmission to the I2C slave device with the given address.
   // Subsequently, queue bytes for transmission with the write() function.
@@ -61,22 +62,20 @@ void setup(){
   // If true, endTransmission() sends a stop message after transmission, releasing the I2C bus.
   Wire.endTransmission(true);
   
+  // Initialize serial communication
   // Sets the data rate in bits per second (baud) for serial data transmission.
-   // initialize serial communication
-    // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but
-    // it's really up to you depending on your project)
-    Serial.begin(38400);
+  Serial.begin(38400);
   
-  // initialize device
-    Serial.println("Initializing I2C devices...");
-    accelgyro.initialize();
+  // Initialize device
+  Serial.println("Initializing I2C devices...");
+  accelgyro.initialize();
 
-    // verify connection
-    Serial.println("Testing device connections...");
-    Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+  // Verify connection
+  Serial.println("Testing device connections...");
+  Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
-  // configure Arduino LED for
-    pinMode(LED_PIN, OUTPUT);
+  // Arduino LED Configuration
+  pinMode(LED_PIN, OUTPUT);
 }
 
 
