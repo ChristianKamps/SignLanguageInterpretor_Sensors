@@ -123,6 +123,6 @@ void loop(){
   // Equation for temperature in degrees C from datasheet
   Serial.print(" | Tmp = "); Serial.print(Tmp/340.00+36.53);  
   
-  
+  // Pauses the program for 333 milliseconds
   delay(333);
 }
