@@ -3,10 +3,12 @@
 // I2C address of the MPU-6050
 const int MPU_addr=0x68;  
 
-// I2C address of Power Supply Managment Register (PWR_MGMT_1) of the MPU-6050
+// I2C address of Power Supply Managment Register of the MPU-6050
+// PWR_MGMT_1
 const int MPU_addr_pwr_mng=0x6B;  
 
 // I2C address of the Accelerometer Measurement Register of the first 8 [15:8] bits of the Accerlerometer X-Output
+// ACCEL_XOUT[15:8]
 const int MPU_addr_accel_x_high=0x3B;  
 
 // 16-bit integer for each sensor output
