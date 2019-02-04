@@ -3,24 +3,52 @@
 // I2C address of the MPU-6050
 const int MPU_addr=0x68;  
 
+// I2C address of Power Supply Managment Register (PWR_MGMT_1) of the MPU-6050
+const int MPU_addr_pwr_mng=0x6B;  
+
 // 16-bit integer for each sensor output
 
+// Accelerometer X-Output
 int16_t AcX;
+// Accelerometer Y-Output
 int16_t AcY;
+// Accelerometer Z-Output
 int16_t AcZ;
+// Temperature Output
 int16_t Tmp;
+// Gyroscope X-Output
 int16_t GyX;
+// Gyroscope Y-Output
 int16_t GyY;
+// Gyroscope Z-Output
 int16_t GyZ;
 
 void setup(){
+
+  // Initiate the Wire library and join the I2C bus as a master 
   Wire.begin();
+  
+  // Begin a transmission to the I2C slave device with the given address.
+  // Subsequently, queue bytes for transmission with the write() function.
+  // Transmit write function by calling endTransmission().
   Wire.beginTransmission(MPU_addr);
-  Wire.write(0x6B);  // PWR_MGMT_1 register
-  Wire.write(0);     // set to zero (wakes up the MPU-6050)
+  
+  // Queues bytes for transmission from a master(Arduino Board) to slave device(MPU 6050)
+  // Write 0 to Power Managment Register 1
+  // This sets the clock source to the Internal 8MHz Oscillator
+  Wire.write(MPU_addr_pwr_mng);  
+  Wire.write(0);     
+  
+  // Ends a transmission to a slave device that was begun by beginTransmission(). 
+  // Transmits the bytes that were queued by write().
   Wire.endTransmission(true);
+  
+  // Sets the data rate in bits per second (baud) for serial data transmission.
   Serial.begin(9600);
+  
 }
+
+
 void loop(){
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
