@@ -27,23 +27,22 @@ void setup(){
   accelgyro.setZGyroOffset(0);
 }
 
-
 //possibly make a calibration function to call to use when switching between the users!! Would use
 //the code above for resetting the values to zero. 
-//void calibration(){
+void calibration(){
 accelgyro.setXaccelOffset(0);
 accelgyro.setYaccelOffset(0);
 accelgyro.setZaccelOffset(0);
 accelgyro.setXGyroOffset(0);
 accelgyro.seYXGyroOffset(0);
 accelgyro.setZGyroOffset(0);
-}//
+}
 
 void loop(){
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
   Wire.endTransmission(false);
-  Wire.requestFrom(MPU_addr,14,true);  // request a total of 14 registers
+  Wire.requestFrom(MPU_addr,12,true);  // request a total of 12 registers
   AcX=Wire.read()<<8|Wire.read();  // 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)     
   AcY=Wire.read()<<8|Wire.read();  // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
   AcZ=Wire.read()<<8|Wire.read();  // 0x3F (ACCEL_ZOUT_H) & 0x40 (ACCEL_ZOUT_L)
@@ -56,5 +55,5 @@ void loop(){
   Serial.print(" | GyX = "); Serial.print(GyX);
   Serial.print(" | GyY = "); Serial.print(GyY);
   Serial.print(" | GyZ = "); Serial.println(GyZ);
-  delay(333);
+  delay(300);
 }
